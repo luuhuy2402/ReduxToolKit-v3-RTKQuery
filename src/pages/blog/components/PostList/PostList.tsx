@@ -4,14 +4,14 @@ import SkeletonPost from 'pages/blog/components/SkeletonPost'
 
 export default function PostList() {
   //bên service mk khai báo argument là void nên ko cần truyền gì vào useGetPostsQuery
-  const { data, isLoading, isFetching } = useGetPostsQuery()
+  const { data, isLoading, isFetching } = useGetPostsQuery() //useQuery return 1 object
   /**
    * isLoading chỉ dành cho lần fetch đầu tiên
    * ísFetching là cho mỗi lần gọi API
    */
-  console.log(data)
-  console.log('isLoading', isLoading)
-  console.log('isFetching', isFetching)
+  // console.log(data)
+  // console.log('isLoading', isLoading)
+  // console.log('isFetching', isFetching)
   return (
     <div className='bg-white py-6 sm:py-8 lg:py-12'>
       <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
