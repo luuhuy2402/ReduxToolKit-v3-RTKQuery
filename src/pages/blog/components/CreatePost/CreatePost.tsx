@@ -13,9 +13,9 @@ export default function CreatePost() {
   const [formData, setFormData] = useState<Omit<Post, 'id'>>(initialState)
   /**
    * //useMutation return 1 array
-   * 1. return veef 1 function
-   * 2. return veef 1 object result
-   * tên tự đặt
+   * 1. return về 1 function
+   * 2. return về 1 object result
+   * tên tự đặt addPost,addPostResult
    */
   const [addPost, addPostResult] = useAddPostMutation()
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
