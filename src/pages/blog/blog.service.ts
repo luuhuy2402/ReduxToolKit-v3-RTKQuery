@@ -131,8 +131,20 @@ export const blogApi = createApi({
     //Lấy bài post muốn update
     getPost: build.query<Post, string>({
       query: (id) => `posts/${id}`
+    }),
+    //update bài post
+    updatePost: build.mutation<Post, { id: string; body: Post }>({
+      query(data) {
+        return {
+          url: `posts/${data.id}`,
+          method: 'PUT',
+          body: data.body
+        }
+      },
+      //vì update bài post nên mk có id nên truyền id của bài post vào  để gọi lai API ko mk đê là 'LIST' cũng ko sao
+      invalidatesTags: (result, error, data) => [{ type: 'Posts', id: data.id }]
     })
   })
 })
-
-export const { useGetPostsQuery, useAddPostMutation, useGetPostQuery } = blogApi //endpoints tự sinh ra các hooks tương ứng để sử dụng trong các component
+//endpoints tự sinh ra các hooks tương ứng để sử dụng trong các component
+export const { useGetPostsQuery, useAddPostMutation, useGetPostQuery, useUpdatePostMutation } = blogApi

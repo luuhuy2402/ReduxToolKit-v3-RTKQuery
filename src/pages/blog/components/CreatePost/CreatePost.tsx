@@ -1,4 +1,4 @@
-import { useAddPostMutation, useGetPostQuery } from 'pages/blog/blog.service'
+import { useAddPostMutation, useGetPostQuery, useUpdatePostMutation } from 'pages/blog/blog.service'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
@@ -12,7 +12,7 @@ const initialState: Omit<Post, 'id'> = {
   title: ''
 }
 export default function CreatePost() {
-  const [formData, setFormData] = useState<Omit<Post, 'id'>>(initialState)
+  const [formData, setFormData] = useState<Omit<Post, 'id'> | Post>(initialState)
   /**
    * //useMutation return 1 array
    * 1. return về 1 function
@@ -22,6 +22,7 @@ export default function CreatePost() {
   const [addPost, addPostResult] = useAddPostMutation()
   const postId = useSelector((state: RootState) => state.blog.postId)
   const { data } = useGetPostQuery(postId, { skip: !postId }) //skip để nếu mà ko có postID thì ko gọi Action
+  const [updatePost, updatePostResult] = useUpdatePostMutation()
   //hiển thị dữ liệu post edit lên form
   useEffect(() => {
     if (data) {
@@ -31,7 +32,11 @@ export default function CreatePost() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await addPost(formData).unwrap()
+    if (postId) {
+      await updatePost({ body: formData as Post, id: postId }).unwrap()
+    } else {
+      await addPost(formData).unwrap()
+    }
     setFormData(initialState)
   }
   return (
