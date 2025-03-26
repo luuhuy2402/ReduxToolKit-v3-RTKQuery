@@ -1,3 +1,4 @@
+import { build } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/cacheLifecycle'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Post } from 'types/blog.type'
 // Nếu bên slice chúng ta dùng createSlice để tạo slice thì bên RTK query dùng createApi
@@ -143,8 +144,20 @@ export const blogApi = createApi({
       },
       //vì update bài post nên mk có id nên truyền id của bài post vào  để gọi lai API ko mk đê là 'LIST' cũng ko sao
       invalidatesTags: (result, error, data) => [{ type: 'Posts', id: data.id }]
+    }),
+    //DELETE POST
+    deletePost: build.mutation<{}, string>({
+      query(id) {
+        return {
+          url: `posts/${id}`,
+          method: 'DELETE'
+        }
+      },
+      // gọi lại API getPosts sau khi xóa 1 post
+      invalidatesTags: (result, error, id) => [{ type: 'Posts', id: id }]
     })
   })
 })
 //endpoints tự sinh ra các hooks tương ứng để sử dụng trong các component
-export const { useGetPostsQuery, useAddPostMutation, useGetPostQuery, useUpdatePostMutation } = blogApi
+export const { useGetPostsQuery, useAddPostMutation, useGetPostQuery, useUpdatePostMutation, useDeletePostMutation } =
+  blogApi
