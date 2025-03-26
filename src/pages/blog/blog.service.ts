@@ -127,8 +127,12 @@ export const blogApi = createApi({
        *
        */
       invalidatesTags: (result, error, body) => [{ type: 'Posts', id: 'LIST' }]
+    }),
+    //Lấy bài post muốn update
+    getPost: build.query<Post, string>({
+      query: (id) => `posts/${id}`
     })
   })
 })
 
-export const { useGetPostsQuery, useAddPostMutation } = blogApi //endpoints tự sinh ra các hooks tương ứng để sử dụng trong các component
+export const { useGetPostsQuery, useAddPostMutation, useGetPostQuery } = blogApi //endpoints tự sinh ra các hooks tương ứng để sử dụng trong các component
