@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Post } from 'types/blog.type'
+import { CustomError } from 'utils/helpers'
 // Nếu bên slice chúng ta dùng createSlice để tạo slice thì bên RTK query dùng createApi
 // Với createApi chúng ta gọi là slice api
 // Chúng ta sẽ khai báo baseUrl và các endpoints
@@ -114,10 +115,14 @@ export const blogApi = createApi({
     //Post kiểu response trả về, Omit<Post,'id'> kiểu dữ liệu gửi lên
     addPost: build.mutation<Post, Omit<Post, 'id'>>({
       query: (body) => {
-        return {
-          url: 'posts',
-          method: 'POST',
-          body
+        try {
+          return {
+            url: 'posts',
+            method: 'POST',
+            body
+          }
+        } catch (error: any) {
+          throw new CustomError(error.message)
         }
       },
       /**
@@ -126,7 +131,7 @@ export const blogApi = createApi({
        * Trong trường hợp này getPosts sẽ chạy lại
        *
        */
-      invalidatesTags: (result, error, body) => [{ type: 'Posts', id: 'LIST' }]
+      invalidatesTags: (result, error, body) => (error ? [] : [{ type: 'Posts', id: 'LIST' }])
     }),
     //Lấy bài post muốn update
     getPost: build.query<Post, string>({
@@ -142,7 +147,7 @@ export const blogApi = createApi({
         }
       },
       //vì update bài post nên mk có id nên truyền id của bài post vào  để gọi lai API ko mk đê là 'LIST' cũng ko sao
-      invalidatesTags: (result, error, data) => [{ type: 'Posts', id: data.id }]
+      invalidatesTags: (result, error, data) => (error ? [] : [{ type: 'Posts', id: data.id }])
     }),
     //DELETE POST
     deletePost: build.mutation<{}, string>({
@@ -153,7 +158,7 @@ export const blogApi = createApi({
         }
       },
       // gọi lại API getPosts sau khi xóa 1 post
-      invalidatesTags: (result, error, id) => [{ type: 'Posts', id: id }]
+      invalidatesTags: (result, error, id) => (error ? [] : [{ type: 'Posts', id: id }])
     })
   })
 })
