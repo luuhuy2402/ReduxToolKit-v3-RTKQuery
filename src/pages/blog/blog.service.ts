@@ -1,4 +1,3 @@
-import { build } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/cacheLifecycle'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Post } from 'types/blog.type'
 // Nếu bên slice chúng ta dùng createSlice để tạo slice thì bên RTK query dùng createApi
